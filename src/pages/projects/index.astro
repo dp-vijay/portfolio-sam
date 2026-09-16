@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Work"
+  description="Selected projects — what the problem was, what I built, and what changed as a result."
+>
+  <div class="mx-auto max-w-3xl px-6 py-14 sm:py-20">
+    <h1 class="font-display text-3xl tracking-tight sm:text-4xl">Work</h1>
+    <p class="mt-4 max-w-prose leading-relaxed text-muted">
+      A few things worth writing up. Each one covers the problem, the decisions that were
+      actually contested, and what changed after it shipped.
+    </p>
+
+    <ul class="mt-10 grid gap-4 sm:grid-cols-2">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </ul>
+  </div>
+</BaseLayout>

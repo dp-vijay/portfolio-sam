@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* Class-based dark mode so the header toggle can override the OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* Semantic colors. Every utility below (bg-bg, text-fg, border-border, ...)
+     resolves to these vars, so the .dark block re-themes the whole site. */
+  --color-bg: #fbfaf7;
+  --color-surface: #ffffff;
+  --color-fg: #15181c;
+  --color-muted: #5d6673;
+  --color-border: #e7e3db;
+  --color-accent: #0d7c6d;
+  --color-accent-soft: rgba(13, 124, 109, 0.1);
+}
+
+.dark {
+  --color-bg: #0c0e11;
+  --color-surface: #14171b;
+  --color-fg: #eceef1;
+  --color-muted: #9aa3b0;
+  --color-border: #232830;
+  --color-accent: #4fd6c0;
+  --color-accent-soft: rgba(79, 214, 192, 0.12);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* clears the sticky header on anchor jumps */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* Markdown body copy on project detail pages. Hand-rolled instead of pulling in
+   the typography plugin — this site only needs a handful of elements. */
+@layer components {
+  .prose {
+    color: var(--color-fg);
+    line-height: 1.75;
+  }
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+  .prose h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1.25;
+    margin-top: 2.25em;
+    letter-spacing: -0.01em;
+  }
+  .prose h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.75em;
+  }
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose strong {
+    font-weight: 650;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.3em;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+  .prose li::marker {
+    color: var(--color-muted);
+  }
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+  .prose pre {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  .prose pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  .prose blockquote {
+    border-left: 2px solid var(--color-accent);
+    padding-left: 1rem;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 2.5em 0;
+  }
+}

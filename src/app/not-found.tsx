@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <section className="mx-auto flex max-w-5xl flex-col items-start px-6 pt-44 sm:pt-56">
+    <section className="mx-auto flex max-w-5xl flex-col items-start px-6 pt-32 sm:pt-44">
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">404</p>
       <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">That page doesn&apos;t exist.</h1>
       <p className="mt-5 max-w-md text-lg text-muted">The link may be out of date, or the page may have moved.</p>

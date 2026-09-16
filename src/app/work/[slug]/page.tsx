@@ -26,11 +26,11 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
   const [from, to] = project.accent;
 
   return (
-    <article className="mx-auto max-w-5xl px-6 pt-32 sm:pt-40">
+    <article className="mx-auto max-w-5xl px-6 pt-24 pb-24 lg:px-12 lg:pt-32">
       <Reveal>
-        <Link href="/work" className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-fg">
-          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" strokeWidth={1.75} />
-          All work
+        <Link href="/work" className="group inline-flex items-center gap-1.5 font-medium transition-colors hover:text-accent">
+          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" strokeWidth={2} />
+          All projects
         </Link>
       </Reveal>
 

@@ -1,116 +1,92 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { profile, skills, stats } from "@/data/site";
+import { profile } from "@/data/site";
 import { featuredProjects } from "@/data/projects";
-import { Hero } from "@/components/hero";
-import { Reveal } from "@/components/reveal";
-import { SectionHeading } from "@/components/section-heading";
-import { ProjectCard } from "@/components/project-card";
-import { Marquee } from "@/components/marquee";
-import { Stat } from "@/components/stat";
-import { Timeline } from "@/components/timeline";
+import { Sidebar } from "@/components/sidebar";
+import { Section } from "@/components/section";
+import { ExperienceList } from "@/components/experience-list";
+import { ProjectList } from "@/components/project-list";
+import { Skills } from "@/components/skills";
 import { CopyEmail } from "@/components/copy-email";
+
+const sections = [
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "contact", label: "Contact" },
+];
 
 export default function Home() {
   return (
-    <>
-      <Hero />
+    <div className="mx-auto max-w-6xl px-6 lg:px-12">
+      <div className="lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 xl:gap-24">
+        <Sidebar sections={sections} />
 
-      {/* Stats strip */}
-      <section className="mx-auto max-w-5xl px-6">
-        <Reveal className="glass grid grid-cols-2 gap-8 rounded-2xl p-8 sm:grid-cols-4 sm:p-10">
-          {stats.map((s) => (
-            <Stat key={s.label} {...s} />
-          ))}
-        </Reveal>
-      </section>
+        <div className="pt-16 lg:py-24">
+          <div className="space-y-24 lg:space-y-32">
+            <Section id="about" label="About">
+              <div className="space-y-4 leading-relaxed text-muted">
+                {profile.bio.map((p) => (
+                  <p key={p} className="text-pretty">{p}</p>
+                ))}
+              </div>
+            </Section>
 
-      {/* Work */}
-      <section id="work" className="mx-auto max-w-5xl scroll-mt-24 px-6 pt-28 sm:pt-36">
-        <SectionHeading
-          index="01"
-          eyebrow="Selected work"
-          title="Things I've built that changed a number someone cared about."
-          description="Each one covers the problem, the decisions that were actually contested, and what happened after it shipped."
-          action={
-            <Link href="/work" className="group inline-flex shrink-0 items-center gap-1.5 text-sm text-muted transition-colors hover:text-fg">
-              All projects
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
-            </Link>
-          }
-        />
-        <div className="grid gap-5 md:grid-cols-2">
-          {featuredProjects.map((project, i) => (
-            <Reveal key={project.slug} delay={i * 0.08} className={i === 0 ? "md:col-span-2" : undefined}>
-              <ProjectCard project={project} index={i} wide={i === 0} />
-            </Reveal>
-          ))}
-        </div>
-      </section>
+            <Section id="experience" label="Experience">
+              <ExperienceList />
+              {profile.resumeUrl && (
+                <a
+                  href={profile.resumeUrl}
+                  target="_blank"
+                  rel="noopener"
+                  className="group mt-10 inline-flex items-center gap-1.5 font-medium transition-colors hover:text-accent"
+                >
+                  View full résumé
+                  <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2} />
+                </a>
+              )}
+            </Section>
 
-      {/* About */}
-      <section id="about" className="mx-auto max-w-5xl scroll-mt-24 px-6 pt-28 sm:pt-36">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
-          <Reveal>
-            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-              <span className="text-muted">02</span> — About
-            </p>
-            <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-              Engineer first, but I sweat the pixels.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1} className="space-y-5 text-[17px] leading-relaxed text-muted">
-            {profile.bio.map((p) => (
-              <p key={p} className="text-pretty">{p}</p>
-            ))}
-          </Reveal>
-        </div>
+            <Section id="projects" label="Projects">
+              <ProjectList projects={featuredProjects} />
+              <Link
+                href="/work"
+                className="group mt-10 inline-flex items-center gap-1.5 font-medium transition-colors hover:text-accent"
+              >
+                View full project archive
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
+              </Link>
+            </Section>
 
-        <Reveal className="mt-16 space-y-3">
-          <Marquee items={skills.rowA} />
-          <Marquee items={skills.rowB} reverse />
-        </Reveal>
-      </section>
+            <Section id="skills" label="Skills">
+              <Skills />
+            </Section>
 
-      {/* Experience */}
-      <section id="experience" className="mx-auto max-w-5xl scroll-mt-24 px-6 pt-28 sm:pt-36">
-        <SectionHeading
-          index="03"
-          eyebrow="Experience"
-          title="Where I've worked."
-        />
-        <Timeline />
-      </section>
-
-      {/* Contact */}
-      <section id="contact" className="mx-auto max-w-5xl scroll-mt-24 px-6 pt-28 sm:pt-36">
-        <Reveal className="gradient-border relative overflow-hidden rounded-3xl bg-surface p-8 sm:p-14">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full blur-3xl"
-            style={{ background: "radial-gradient(closest-side, var(--blob-1), transparent 70%)" }}
-          />
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-            <span className="text-muted">04</span> — Contact
-          </p>
-          <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
-            Have something worth building? Let&apos;s talk.
-          </h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted text-pretty">
-            The fastest way to reach me is email. I read everything and reply to anything that isn&apos;t a recruiter template.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a
-              href={`mailto:${profile.email}`}
-              className="group inline-flex h-11 items-center gap-2 rounded-full bg-fg pl-5 pr-4 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
-            >
-              Send an email
-              <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2} />
-            </a>
-            <CopyEmail email={profile.email} />
+            <Section id="contact" label="Contact">
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Get in touch</h2>
+              <p className="mt-4 max-w-md leading-relaxed text-muted text-pretty">
+                I&apos;m open to interesting roles and projects. If you&apos;d like to work together or just say
+                hello, my inbox is always open.
+              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="inline-flex h-11 items-center rounded-full bg-fg px-5 text-sm font-medium text-bg transition-transform hover:-translate-y-0.5"
+                >
+                  Say hello
+                </a>
+                <CopyEmail email={profile.email} />
+              </div>
+            </Section>
           </div>
-        </Reveal>
-      </section>
-    </>
+
+          <footer className="mt-24 max-w-md text-sm leading-relaxed text-muted lg:mt-32">
+            Designed and built by {profile.fullName}. Made with Next.js and Tailwind CSS, deployed on GitHub
+            Pages.
+          </footer>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { profile } from "@/data/site";
 import { Background } from "@/components/background";
-import { Nav } from "@/components/nav";
-import { Footer } from "@/components/footer";
+import { CursorGlow } from "@/components/cursor-glow";
+import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -15,11 +15,11 @@ export const metadata: Metadata = {
     default: `${profile.fullName} — ${profile.role}`,
     template: `%s — ${profile.name}`,
   },
-  description: profile.intro,
+  description: profile.tagline,
   openGraph: {
     type: "website",
     title: `${profile.fullName} — ${profile.role}`,
-    description: profile.intro,
+    description: profile.tagline,
     siteName: profile.fullName,
   },
   twitter: { card: "summary_large_image" },
@@ -47,11 +47,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <Background />
-        <Nav />
+        <CursorGlow />
+        <div className="fixed right-4 top-4 z-50 sm:right-6 sm:top-6">
+          <ThemeToggle className="glass" />
+        </div>
         <main id="main" className="flex-1">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );

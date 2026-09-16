@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* Class-based dark mode so the nav toggle can override the OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Semantic tokens. Utilities (bg-bg, text-muted, border-border…) resolve to
+     these vars, so the .dark block below re-themes everything. */
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 40s linear infinite;
+  --animate-float: float 14s ease-in-out infinite;
+  --animate-float-slow: float 22s ease-in-out infinite reverse;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+}
+
+:root {
+  --bg: #fafafa;
+  --fg: #09090b;
+  --muted: #62626b;
+  --border: rgba(9, 9, 11, 0.09);
+  --surface: rgba(9, 9, 11, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.7);
+  --accent: #7c3aed;
+  --accent-2: #0891b2;
+  --blob-1: rgba(124, 58, 237, 0.22);
+  --blob-2: rgba(8, 145, 178, 0.18);
+  --grid: rgba(9, 9, 11, 0.07);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #050507;
+  --fg: #f4f4f5;
+  --muted: #9d9da8;
+  --border: rgba(255, 255, 255, 0.09);
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-2: rgba(10, 10, 14, 0.7);
+  --accent: #a78bfa;
+  --accent-2: #22d3ee;
+  --blob-1: rgba(139, 92, 246, 0.28);
+  --blob-2: rgba(34, 211, 238, 0.16);
+  --grid: rgba(255, 255, 255, 0.055);
+  color-scheme: dark;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(6%, -8%, 0) scale(1.08); }
+  66% { transform: translate3d(-5%, 6%, 0) scale(0.95); }
+}
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent-2) 60%, transparent); }
+  70% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background-color: color-mix(in oklab, var(--accent) 80%, transparent);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Frosted panel used by the nav and stat strip. */
+  .glass {
+    background-color: var(--surface-2);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid var(--border);
+  }
+
+  /* Headline highlight. */
+  .text-gradient {
+    background-image: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent) 110%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* One-pixel gradient border via a masked pseudo-element; keeps the inner
+     background fully independent of the border colour. */
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 70%, transparent), transparent 40%, transparent 60%, color-mix(in oklab, var(--accent-2) 70%, transparent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Dot grid that fades out toward the edges. */
+  .dot-grid {
+    background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+
+  /* Film grain — keeps large gradients from banding and adds texture. */
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+  }
+  .dark .noise { opacity: 0.06; }
+
+  /* Horizontal fade on the marquee edges. */
+  .fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  /* Case-study body copy. */
+  .prose-case {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 1.0625rem;
+  }
+  .prose-case p + p { margin-top: 1.25em; }
+  .prose-case strong { color: var(--fg); font-weight: 600; }
+}

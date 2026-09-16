@@ -1,54 +1,40 @@
 # portfolio-sam
 
-Personal portfolio, built with [Astro](https://astro.build) and Tailwind CSS,
-deployed to GitHub Pages at <https://dp-vijay.github.io/portfolio-sam>.
+Personal portfolio built with [Next.js](https://nextjs.org) (static export),
+Tailwind CSS 4 and Motion, deployed to GitHub Pages at
+<https://dp-vijay.github.io/portfolio-sam>.
 
 ## Editing content
 
 | What | Where |
 | --- | --- |
-| Name, role, bio, skills, experience, social links | `src/site.config.ts` |
-| Projects (one Markdown file each) | `src/content/projects/*.md` |
-| Colours, fonts | `src/styles/global.css` (`@theme` and `.dark` blocks) |
-| Résumé PDF | drop into `public/` and set `profile.resumeUrl` in `site.config.ts` |
+| Name, headline, bio, stats, skills, experience, socials | `src/data/site.ts` |
+| Projects / case studies | `src/data/projects.ts` |
+| Colours, fonts, effects | `src/app/globals.css` (`:root` and `.dark` blocks) |
+| Résumé PDF | drop into `public/` and set `profile.resumeUrl` to `/portfolio-sam/<file>.pdf` |
 
-A project file looks like:
-
-```md
----
-title: Project name
-summary: One line shown on the card.
-order: 1          # lower numbers first
-featured: true    # show on the homepage
-year: 2025
-tech: ["TypeScript", "PostgreSQL"]
-repo: https://github.com/...   # optional
-demo: https://...              # optional
----
-
-Markdown body — problem, what you built, outcome.
-```
+Each project is a typed object with `problem`, `built`, `decisions`, `outcome`
+and `metrics` — the case-study page lays them out. `featured: true` puts it on
+the homepage; the first featured project gets the wide tile.
 
 ## Local development
 
 ```sh
 npm install
-npm run dev       # http://localhost:4321/portfolio-sam/
-npm run build     # static output in dist/
-npm run preview   # serve dist/ locally
+npm run dev       # http://localhost:3000/portfolio-sam/
+npm run build     # static output in out/
+npm run lint
 ```
 
 ## Deployment
 
 Every push to `main` runs `.github/workflows/deploy.yml`, which builds the site
-and publishes `dist/` to GitHub Pages.
-
-One-time setup on GitHub: **Settings → Pages → Build and deployment → Source:
-GitHub Actions**.
+and publishes `out/` to GitHub Pages (source is already set to GitHub Actions).
 
 ### Moving the site
 
-`site` and `base` in `astro.config.mjs` are tied to the repo name. If the repo
-is renamed, or the site moves to `dp-vijay.github.io` or a custom domain, update
-both values — internal links go through `src/lib/url.ts` so nothing else needs
-to change.
+`basePath` in `next.config.ts` and `metadataBase` in `src/app/layout.tsx` are
+tied to the repo name. If the repo is renamed, or the site moves to
+`dp-vijay.github.io` or a custom domain, update both. `<Link>`, fonts and
+metadata icons pick up `basePath` automatically; only raw `/public` asset paths
+need prefixing by hand.
